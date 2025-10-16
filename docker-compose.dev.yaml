@@ -1,0 +1,34 @@
+name: 'socialy-dev'
+
+services:
+  api:
+    build:
+      context: .
+      target: build
+    command: pnpm start:dev
+    environment:
+      - NODE_ENV=development
+    networks:
+      - socialy_network_dev
+    volumes:
+      - ./:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - socialy_db_dev
+
+  socialy_db_dev:
+    image: postgres:17-alpine
+    networks:
+      - socialy_network_dev
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB="socialy"
+      - PGDATA=/var/lib/postgresql/17/docker
+    volumes:
+      - postgresql:/var/lib/postgresql
+
+networks:
+  socialy_network_dev:
+    driver: bridge
+volumes:
+  postgresql:

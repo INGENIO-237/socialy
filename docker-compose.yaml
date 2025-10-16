@@ -1,0 +1,20 @@
+name: 'socialy'
+
+services:
+  api:
+    build:
+      context: .
+      target: prod
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 3000:3000
+    networks:
+      - socialy_network
+
+networks:
+  socialy_network:
+    driver: bridge
