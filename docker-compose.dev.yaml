@@ -5,9 +5,14 @@ services:
     build:
       context: .
       target: build
+    restart: always
     command: pnpm start:dev
+    env_file:
+      - ./.env
     environment:
       - NODE_ENV=development
+    ports:
+      - 3000:3000
     networks:
       - socialy_network_dev
     volumes:
@@ -18,12 +23,14 @@ services:
 
   socialy_db_dev:
     image: postgres:17-alpine
+    ports:
+      - 5432:5432
     networks:
       - socialy_network_dev
     environment:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB="socialy"
-      - PGDATA=/var/lib/postgresql/17/docker
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
     volumes:
       - postgresql:/var/lib/postgresql
 

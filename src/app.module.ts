@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { env } from './configs/env-config';
 
 @Module({
-  imports: [],
+  imports: [
+    TypeOrmModule.forRoot({
+      ...env.database,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
