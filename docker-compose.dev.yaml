@@ -23,6 +23,7 @@ services:
 
   socialy_db_dev:
     image: postgres:17-alpine
+    restart: always
     ports:
       - 5432:5432
     networks:

@@ -1,5 +1,11 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+export enum ENV {
+  DEV = 'development',
+  PROD = 'production',
+  TEST = 'test',
+}
+
 const databaseOptions: TypeOrmModuleOptions = {
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
@@ -7,7 +13,8 @@ const databaseOptions: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  autoLoadEntities: true,
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  synchronize: process.env.NODE_ENV !== ENV.PROD ? true : false,
 };
 
 export const env = {
