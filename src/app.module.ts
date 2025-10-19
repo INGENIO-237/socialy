@@ -4,11 +4,6 @@ import { env } from './configs/env.config';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      ...env.database,
-    }),
-    UsersModule,
-  ],
+  imports: [TypeOrmModule.forRoot({ ...env.database }), UsersModule],
 })
 export class AppModule {}

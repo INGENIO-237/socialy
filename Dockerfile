@@ -4,6 +4,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
+COPY pnpm-lock.yaml .
 COPY package.json .
 
 RUN pnpm install
@@ -18,6 +19,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
+COPY pnpm-lock.yaml .
 COPY package.json .
 
 RUN pnpm install --prod
