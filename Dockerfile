@@ -4,8 +4,8 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
-COPY package.json .
 COPY pnpm-lock.yaml .
+COPY package.json .
 
 RUN pnpm install
 
@@ -19,8 +19,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
-COPY --from=build /usr/app/dist .
+COPY pnpm-lock.yaml .
+COPY package.json .
 
-RUN pnpm ci --omit=dev
+RUN pnpm install --prod
+
+COPY --from=build /usr/app/dist .
 
 CMD ["node", "main.js"]
