@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationMetadata } from 'src/utils/base/pagination/dtos/pagination-metadata.dto';
 import { PaginatedData } from 'src/utils/base/response/paginated-data';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersQueryDto } from './dtos/get-users-query.dto';
 import { User } from './user.entity';
 
@@ -34,5 +35,21 @@ export class UsersService {
     };
 
     return { data: result, metadata };
+  }
+
+  async create(payload: CreateUserDto) {
+    const existingUser = await this.repository.findOne({
+      where: {
+        email: payload.email,
+      },
+    });
+
+    if(existingUser) {
+      throw new ConflictException('User with this email already exists');
+    }
+
+    const createdUser = await this.repository.save(payload);
+
+    return createdUser;
   }
 }
