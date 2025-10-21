@@ -5,15 +5,18 @@ import { PaginatedData } from 'src/utils/base/response/paginated-data';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersQueryDto } from './dtos/get-users-query.dto';
+import { UserResponse } from './dtos/user-response';
 import { User } from './user.entity';
+import { UsersMapper } from './users-mapper';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
+    private readonly mapper: UsersMapper,
   ) {}
 
-  async findAll(query: GetUsersQueryDto): Promise<PaginatedData<User>> {
+  async findAll(query: GetUsersQueryDto): Promise<PaginatedData<UserResponse>> {
     const { page, limit, ...filter } = query;
 
     const skip = (page - 1) * limit;
@@ -34,22 +37,24 @@ export class UsersService {
       total,
     };
 
-    return { data: result, metadata };
+    return { data: this.mapper.toUserResponseList(result), metadata };
   }
 
-  async create(payload: CreateUserDto) {
+  async create(payload: CreateUserDto): Promise<UserResponse> {
     const existingUser = await this.repository.findOne({
       where: {
         email: payload.email,
       },
     });
 
-    if(existingUser) {
+    if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
 
     const createdUser = await this.repository.save(payload);
 
-    return createdUser;
+    const userResponse = this.mapper.toUserResponse(createdUser);
+
+    return userResponse;
   }
 }

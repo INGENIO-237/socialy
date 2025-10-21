@@ -17,6 +17,6 @@ export const env = {
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    synchronize: process.env.NODE_ENV !== ENV.PROD ? true : false,
+    synchronize: process.env.NODE_ENV !== ENV.PROD,
   } as TypeOrmModuleOptions,
 };
