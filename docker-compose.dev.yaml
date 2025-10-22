@@ -35,6 +35,17 @@ services:
     volumes:
       - postgresql:/var/lib/postgresql
 
+  compodoc:
+    build:
+      context: .
+      target: build
+    depends_on:
+      - api
+    ports:
+      - 8080:8080
+    volumes:
+      - ./documentation:/usr/app/documentation
+    command: pnpx @compodoc/compodoc -p tsconfig.json -s
 networks:
   socialy_network_dev:
     driver: bridge
