@@ -2,7 +2,6 @@ import { ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
-import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserResponse } from './dtos/user-response';
 import { User } from './user.entity';
@@ -11,11 +10,11 @@ import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repository: Repository<User>;
 
   const repositoryMock = {
     find: jest.fn(),
     count: jest.fn(),
+    create: jest.fn(),
     save: jest.fn(),
     findOne: jest.fn(),
   };
@@ -25,7 +24,7 @@ describe('UsersService', () => {
     toUserResponseList: jest.fn(),
   };
 
-  const users: User[] = [
+  const users: Omit<Omit<User, 'hashPassword'>, 'validatePassword'>[] = [
     {
       id: randomUUID(),
       firstname: 'John',
@@ -73,7 +72,6 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    repository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
   describe('findAll', () => {
@@ -162,6 +160,24 @@ describe('UsersService', () => {
         .catch((error) => {
           expect(error).toBeInstanceOf(ConflictException);
         });
+    });
+  });
+
+  describe('findByEmail', () => {
+    it('should return user for existing email', async () => {
+      repositoryMock.findOne.mockResolvedValue(users[0]);
+
+      const result = await service.findByEmail(users[0].email);
+
+      expect(result).toEqual(users[0]);
+    });
+
+    it('should throw NotFoundException for non existing email address', () => {
+      repositoryMock.findOne.mockResolvedValue(null);
+
+      const email = 'non-existing@email.com';
+
+      expect(service.findByEmail(email)).rejects.toThrow('User not found');
     });
   });
 });

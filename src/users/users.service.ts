@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationMetadata } from 'src/utils/base/pagination/dtos/pagination-metadata.dto';
 import { PaginatedData } from 'src/utils/base/response/paginated-data';
@@ -51,10 +55,23 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
-    const createdUser = await this.repository.save(payload);
+    const user = this.repository.create(payload);
+    const createdUser = await this.repository.save(user);
 
     const userResponse = this.mapper.toUserResponse(createdUser);
 
     return userResponse;
+  }
+
+  async findByEmail(identifier: string): Promise<User> {
+    const user = await this.repository.findOne({
+      where: { email: identifier },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }
