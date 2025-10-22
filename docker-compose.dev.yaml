@@ -1,4 +1,4 @@
-name: 'socialy-dev'
+name: "socialy-dev"
 
 services:
   api:

@@ -24,7 +24,7 @@ describe('UsersService', () => {
     toUserResponseList: jest.fn(),
   };
 
-  const users: User[] = [
+  const users: Omit<Omit<User, 'hashPassword'>, 'validatePassword'>[] = [
     {
       id: randomUUID(),
       firstname: 'John',
