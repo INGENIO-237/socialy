@@ -4,10 +4,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
-COPY pnpm-lock.yaml .
-COPY package.json .
+# Copy dependency files first for better caching
+COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install
+# Install dependencies with frozen lockfile
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
@@ -19,10 +20,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
-COPY pnpm-lock.yaml .
-COPY package.json .
+# Copy dependency files
+COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install --prod
+# Install only production dependencies
+RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=build /usr/app/dist .
 
