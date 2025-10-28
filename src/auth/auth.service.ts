@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { UserResponse } from 'src/users/dtos/user-response';
 import { UsersMapper } from 'src/users/users-mapper';
 import { UsersService } from 'src/users/users.service';
 
@@ -11,7 +12,10 @@ export class AuthService {
     private readonly usersMapper: UsersMapper,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<UserResponse | null> {
     try {
       const user = await this.usersService.findByEmail(email);
 
@@ -19,7 +23,7 @@ export class AuthService {
       if (user && validPassword) {
         return this.usersMapper.toUserResponse(user);
       }
-
+ 
       return null;
     } catch (error) {
       this.logger.error(error);

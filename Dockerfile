@@ -1,10 +1,11 @@
 FROM node:20-alpine as build
 
+ENV CI=true
+
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
-# Copy dependency files first for better caching
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies with frozen lockfile
@@ -16,11 +17,12 @@ RUN pnpm build
 
 FROM node:20-alpine as prod
 
+ENV CI=true
+
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app
 
-# Copy dependency files
 COPY package.json pnpm-lock.yaml ./
 
 # Install only production dependencies
