@@ -2,10 +2,32 @@
   "$schema": "http://json.schemastore.org/package",
   "name": "socialy",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "A modern social media platform built with NestJS, TypeScript, and PostgreSQL",
+  "author": "ABDEL-KALIF BEN HAMADOU <ingeniokhalif@gmail.com>",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "keywords": [
+    "social-media",
+    "nestjs",
+    "typescript",
+    "postgresql",
+    "jwt",
+    "authentication",
+    "follow-system",
+    "rest-api"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/INGENIO-237/socialy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/INGENIO-237/socialy/issues"
+  },
+  "homepage": "https://github.com/INGENIO-237/socialy#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
