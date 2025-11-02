@@ -5,7 +5,9 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
+import { Follow } from 'src/follow/follow.entity';
 
 @Entity()
 export class User {
@@ -26,6 +28,12 @@ export class User {
 
   @Column({ nullable: true })
   bio?: string;
+
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  following: Follow[];
+
+  @OneToMany(() => Follow, (follow) => follow.followee)
+  followers: Follow[];
 
   @BeforeInsert()
   @BeforeUpdate()
