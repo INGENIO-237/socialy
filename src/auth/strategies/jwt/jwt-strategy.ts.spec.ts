@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtStrategy } from './jwt-strategy.ts';
 import { JwtPayload } from 'src/auth/types/jwt-payload.js';
@@ -14,6 +15,8 @@ describe('JwtStrategy', () => {
   const payload: JwtPayload = {
     sub: 'kajkjdauuudiuia',
     email: 'some@email.com',
+    firstname: 'john',
+    lastname: 'doe',
   };
 
   beforeEach(async () => {
@@ -28,7 +31,10 @@ describe('JwtStrategy', () => {
     const user = provider.validate(payload);
 
     expect(user).toBeDefined();
-    expect(user.email).toEqual(payload.email);
-    expect(user.userId).toEqual(payload.sub);
+
+    const { id, ...userRemaining } = user;
+    const { sub, ...payloadRemaining } = payload;
+
+    expect(userRemaining).toEqual(payloadRemaining);
   });
 });

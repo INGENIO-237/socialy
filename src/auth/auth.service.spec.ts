@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersMapper } from 'src/users/users-mapper';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -14,6 +15,10 @@ describe('AuthService', () => {
     toUserResponse: jest.fn(),
   };
 
+  const jwtServiceMock = {
+    sign: jest.fn(),
+  };
+
   const userMock = {
     id: 'some-uuid',
     firstname: 'John',
@@ -22,6 +27,7 @@ describe('AuthService', () => {
     validatePassword: jest.fn(),
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { validatePassword, ...user } = userMock;
 
   beforeEach(async () => {
@@ -35,6 +41,10 @@ describe('AuthService', () => {
         {
           provide: UsersMapper,
           useValue: usersMapperMock,
+        },
+        {
+          provide: JwtService,
+          useValue: jwtServiceMock,
         },
       ],
     }).compile();
@@ -64,6 +74,18 @@ describe('AuthService', () => {
       );
 
       expect(result).toBe(null);
+    });
+  });
+
+  describe('login', () => {
+    it('should log in user', () => {
+      const accessToken = 'akjajsa.ajsajai.asajsoqoiwuiwquwqoioqa.ajsaj';
+
+      jwtServiceMock.sign.mockReturnValue(accessToken);
+
+      const generatedAccessToken = service.login(user);
+
+      expect(generatedAccessToken).toEqual(accessToken);
     });
   });
 });

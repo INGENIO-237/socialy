@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Controller,
   Get,
@@ -11,9 +15,8 @@ import { UserResponse } from 'src/users/dtos/user-response';
 import { ApiResponse } from 'src/utils/base/response/api-response';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login-response.dto';
-import { LocalAuthGuard } from './strategies/local/local-auth-guard';
 import { JwtAuthGuard } from './strategies/jwt/jwt-auth-guard';
-import { JwtUser } from './types/jwt-user';
+import { LocalAuthGuard } from './strategies/local/local-auth-guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,7 +39,7 @@ export class AuthController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  profile(@Request() req: any): ApiResponse<JwtUser> {
+  profile(@Request() req: any): ApiResponse<UserResponse> {
     return {
       message: 'Profile retrieved successfully',
       data: req.user,
