@@ -6,7 +6,7 @@ services:
       context: .
       target: build
     restart: always
-    command: pnpm start:dev
+    command: sh -c "pnpm install && pnpm start:dev"
     env_file:
       - ./.env
     environment:
@@ -17,7 +17,7 @@ services:
       - socialy_network_dev
     volumes:
       - ./:/usr/app
-      - /usr/app/node_modules
+      - node_modules:/usr/app/node_modules
     depends_on:
       - socialy_db_dev
 
@@ -51,3 +51,4 @@ networks:
     driver: bridge
 volumes:
   postgresql:
+  node_modules:

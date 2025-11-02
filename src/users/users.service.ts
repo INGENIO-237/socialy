@@ -63,9 +63,9 @@ export class UsersService {
     return userResponse;
   }
 
-  async findByEmail(identifier: string): Promise<User> {
+  async findByEmail(email: string): Promise<User> {
     const user = await this.repository.findOne({
-      where: { email: identifier },
+      where: { email },
     });
 
     if (!user) {
